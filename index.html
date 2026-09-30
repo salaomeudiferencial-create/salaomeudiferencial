@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salão Meu Diferencial - Agendamento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-pink-50 font-sans min-h-screen pb-12">
+
+    <!-- Header / Banner -->
+    <header class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-center py-10 px-4 shadow-md rounded-b-3xl">
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-wide">✨ Salão Meu Diferencial ✨</h1>
+        <p class="text-pink-100 mt-2 text-sm md:text-base">Seu estilo, seu poder. Agende seu horário de forma rápida e prática!</p>
+        
+        <!-- Links Rápidos -->
+        <div class="flex justify-center gap-4 mt-6 flex-wrap">
+            <a href="https://www.instagram.com/salao_meu_diferencial" target="_blank" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2 backdrop-blur-sm transition">
+                <i class="fab fa-instagram text-pink-300 text-base"></i> @salao_meu_diferencial
+            </a>
+            <a href="https://wa.me/5598987583306" target="_blank" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2 backdrop-blur-sm transition">
+                <i class="fab fa-whatsapp text-green-400 text-base"></i> WhatsApp
+            </a>
+            <a href="https://maps.google.com/?q=Rua+18,+17+Vila+Embratel+Sao+Luis" target="_blank" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2 backdrop-blur-sm transition">
+                <i class="fas fa-map-marker-alt text-red-400 text-base"></i> Ver Localização
+            </a>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-xl mx-auto mt-8 px-4">
+        
+        <!-- Card de Agendamento -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-pink-100">
+            <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-b pb-3 border-gray-100">
+                <i class="far fa-calendar-check text-pink-500"></i> Agende Online
+            </h2>
+
+            <form id="formAgendamento" class="space-y-5" onsubmit="processarAgendamento(event)">
+                <!-- Nome -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Seu Nome Completo</label>
+                    <input type="text" id="nomeCliente" required placeholder="Ex: Maria Souza" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                </div>
+
+                <!-- WhatsApp -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Seu WhatsApp</label>
+                    <input type="tel" id="whatsappCliente" required placeholder="Ex: (98) 99999-9999" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                </div>
+
+                <!-- Serviço -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Escolha o Serviço</label>
+                    <select id="selectServico" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                        <option value="">Selecione...</option>
+                        <option value="Corte Feminino|50.00">Corte Feminino - R$ 50,00</option>
+                        <option value="Escova|40.00">Escova - R$ 40,00</option>
+                        <option value="Manicure|30.00">Manicure - R$ 30,00</option>
+                    </select>
+                </div>
+
+                <!-- Profissional -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Escolha o Profissional</label>
+                    <select id="selectProfissional" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                        <option value="">Qualquer profissional disponível</option>
+                        <option value="Maria Silva">Maria Silva</option>
+                        <option value="Ana Costa">Ana Costa</option>
+                    </select>
+                </div>
+
+                <!-- Data e Hora -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Data</label>
+                        <input type="date" id="dataAgenda" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Horário</label>
+                        <select id="horaAgenda" required class="w-full px-4 py-2.5 border border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition">
+                            <option value="">Selecione...</option>
+                            <option value="09:00">09:00</option>
+                            <option value="10:00">10:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Opção de Pagamento Anticipado -->
+                <div class="bg-pink-50 p-4 rounded-xl border border-pink-100">
+                    <label class="block text-sm font-bold text-pink-800 mb-2">Forma de Pagamento</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                            <input type="radio" name="pagamento" value="Local" checked class="text-pink-500 focus:ring-pink-400"> Pagar no Salão (Dinheiro/Cartão)
+                        </label>
+                        <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                            <input type="radio" name="pagamento" value="MercadoPago" class="text-pink-500 focus:ring-pink-400"> Pagar agora via Mercado Pago (Pix/Crédito)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Botão de Confirmação -->
+                <button type="submit" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition transform active:scale-95 flex justify-center items-center gap-2">
+                    <i class="fab fa-whatsapp text-lg"></i> Concluir e Enviar via WhatsApp
+                </button>
+            </form>
+        </div>
+
+        <!-- Endereço Rodapé -->
+        <p class="text-center text-xs text-gray-500 mt-6 flex items-center justify-center gap-1">
+            <i class="fas fa-map-marker-alt text-pink-400"></i> Rua 18, 17 Vila Embratel, São Luís - MA
+        </p>
+    </main>
+
+    <script>
+        function processarAgendamento(e) {
+            e.preventDefault();
+            
+            const nome = document.getElementById('nomeCliente').value;
+            const whatsapp = document.getElementById('whatsappCliente').value;
+            const servicoCompleto = document.getElementById('selectServico').value.split('|');
+            const servicoNome = servicoCompleto[0];
+            const servicoPreco = servicoCompleto[1];
+            const profissional = document.getElementById('selectProfissional').value || "Qualquer Disponível";
+            const data = document.getElementById('dataAgenda').value;
+            const hora = document.getElementById('horaAgenda').value;
+            const formaPagamento = document.querySelector('input[name="pagamento"]:checked').value;
+
+            // Se escolher Mercado Pago, simula o redirecionamento integrado
+            if(formaPagamento === 'MercadoPago') {
+                alert(`Redirecionando para a integração Mercado Pago... Valor: R$ ${servicoPreco}. (Após o pagamento fictício, o WhatsApp abrirá automaticamente)`);
+            }
+
+            // Mensagem estruturada para o WhatsApp do estabelecimento
+            const textoWhats = `*Novo Agendamento - Salão Meu Diferencial*\n\n` +
+                               `👤 *Cliente:* ${nome}\n` +
+                               `📱 *WhatsApp:* ${whatsapp}\n` +
+                               `💇‍♀️ *Serviço:* ${servicoNome} (R$ ${servicoPreco})\n` +
+                               `👩‍🦰 *Profissional:* ${profissional}\n` +
+                               `📅 *Data:* ${data}\n` +
+                               `⏰ *Horário:* ${hora}\n` +
+                               `💳 *Pagamento:* ${formaPagamento === 'MercadoPago' ? 'Aprovado via Mercado Pago (Pix/Crédito)' : 'Pagar no Salão'}`;
+
+            const urlWhats = `https://wa.me/5598987583306?text=${encodeURIComponent(textoWhats)}`;
+            
+            // Abre o whatsapp do estabelecimento com a mensagem pronta
+            window.open(urlWhats, '_blank');
+        }
+    </script>
+</body>
+</html>
