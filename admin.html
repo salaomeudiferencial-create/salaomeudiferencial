@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://jsdelivr.net"></script>
+    <script>
+        // ACHOU! AS LINHAS ESTÃO LOGO AQUI NO INÍCIO:
+        const SUPABASE_URL = "SUA_URL_DO_SUPABASE_AQUI";
+        const SUPABASE_KEY = "SUA_CHAVE_ANON_PUBLIC_AQUI";
+        
+        const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Salão Meu Diferencial</title>
+    <script src="https://tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cloudflare.com">
+</head>
+<body class="bg-gray-100 font-sans min-h-screen flex flex-col md:flex-row">
+    <div id="loginModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm text-center">
+            <div class="w-16 h-16 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fas fa-lock"></i></div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Painel Administrativo</h3>
+            <input type="password" id="senhaAdmin" placeholder="Senha de acesso (padrão: 1234)" class="w-full text-center px-4 py-2.5 border rounded-xl mb-4 outline-none focus:ring-2 focus:ring-pink-400">
+            <button onclick="verificarSenha()" class="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-2.5 rounded-xl">Acessar Painel</button>
+            <p id="erroLogin" class="text-red-500 text-xs mt-3 hidden">⚠️ Senha incorreta!</p>
+        </div>
+    </div>
+    <aside id="sidebar" class="bg-gray-900 text-gray-300 w-full md:w-64 min-h-screen p-5 space-y-6 hidden flex-col">
+        <div class="text-white font-extrabold text-xl text-center border-b border-gray-800 pb-4">Meu Diferencial <span class="text-pink-500">Admin</span></div>
+        <nav class="space-y-2 flex-1">
+            <a href="#" onclick="mudarAba('dashboard')" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-800 transition"><i class="fas fa-chart-pie text-pink-500"></i> Dashboard</a>
+            <a href="#" onclick="mudarAba('pdv')" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-800 transition"><i class="fas fa-cash-register text-green-500"></i> Caixa PDV</a>
+            <a href="#" onclick="mudarAba('agenda')" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-800 transition"><i class="far fa-calendar-alt text-blue-500"></i> Agendas e Bloqueios</a>
+            <a href="#" onclick="mudarAba('cadastros')" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-800 transition"><i class="fas fa-box-open text-purple-500"></i> Cadastros</a>
+        </nav>
+    </aside>
+    <main id="contentArea" class="flex-1 p-6 md:p-8 hidden overflow-y-auto">
+        <section id="aba-dashboard" class="space-y-6 hidden">
+            <h2 class="text-2xl font-black text-gray-800">📊 Painel de Indicadores Real</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-2xl border flex items-center justify-between"><div><p class="text-xs text-gray-400 font-bold uppercase">Faturamento Caixa</p><h3 id="dashCaixa" class="text-xl font-black">R$ 0,00</h3></div></div>
+                <div class="bg-white p-5 rounded-2xl border flex items-center justify-between"><div><p class="text-xs text-gray-400 font-bold uppercase">Comissões Devidas</p><h3 id="dashComissao" class="text-xl font-black">R$ 0,00</h3></div></div>
+                <div class="bg-white p-5 rounded-2xl border flex items-center justify-between"><div><p class="text-xs text-gray-400 font-bold uppercase">Agendamentos Ativos</p><h3 id="dashAgendamentos" class="text-xl font-black">0</h3></div></div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border">
+                <h3 class="font-bold text-gray-800 mb-3">💰 Histórico de Vendas Recentes</h3>
+                <table class="w-full text-left text-sm">
+                    <thead><tr class="bg-gray-50 border-b text-xs font-bold uppercase"><th class="p-3">Tipo</th><th class="p-3">Valor</th><th class="p-3">Pagamento</th><th class="p-3">Comissão</th></tr></thead>
+                    <tbody id="listaVendasDashboard" class="divide-y text-gray-700"></tbody>
+                </table>
+            </div>
+        </section>
+        <section id="aba-pdv" class="space-y-6 hidden">
+            <h2 class="text-2xl font-black text-gray-800">🛒 Caixa Frente de Loja (PDV)</h2>
+            <form onsubmit="registrarVendaPDV(event)" class="bg-white p-6 rounded-2xl border space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div><label class="text-xs font-bold text-gray-500">Tipo</label><select id="pdvTipo" onchange="alternarItensPDV()" class="w-full p-2.5 border rounded-xl"><option value="Servico">Serviço</option><option value="Produto">Produto</option></select></div>
+                    <div><label class="text-xs font-bold text-gray-500">Item</label><select id="pdvItem" class="w-full p-2.5 border rounded-xl"></select></div>
+                    <div><label class="text-xs font-bold text-gray-500">Profissional</label><select id="pdvProfissional" class="w-full p-2.5 border rounded-xl"></select></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label class="text-xs font-bold text-gray-500">Pagamento</label><select id="pdvFormaPagto" class="w-full p-2.5 border rounded-xl"><option value="Pix">Pix</option><option value="Dinheiro">Dinheiro</option><option value="Credito">Crédito</option></select></div>
+                    <div><label class="text-xs font-bold text-gray-500">Quantidade</label><input type="number" id="pdvQuantidade" min="1" value="1" class="w-full p-2.5 border rounded-xl"></div>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-xl">Registrar e Abater Estoque</button>
+            </form>
+        </section>
+        <section id="aba-agenda" class="space-y-6 hidden">
+            <div class="flex justify-between items-center"><h2 class="text-2xl font-black text-gray-800">📅 Agenda de Horários</h2><button onclick="abrirModalBloqueio()" class="bg-red-500 text-white px-4 py-2 rounded-xl text-xs font-bold">Bloquear Horário</button></div>
+            <div id="listaAgendamentosReal" class="bg-white p-5 rounded-2xl border space-y-3"></div>
+        </section>
+        <section id="aba-cadastros" class="space-y-6 hidden">
+            <h2 class="text-2xl font-black text-gray-800">⚙️ Cadastros Operacionais</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-4 rounded-2xl border">
+                    <h4 class="font-bold border-b pb-2 flex justify-between text-sm"><span>💇‍♀️ Serviços</span><button onclick="adicionarServicoPrompt()" class="text-pink-500 font-bold">+ Criar</button></h4>
+                    <div id="crudServicos" class="text-xs divide-y mt-2"></div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border">
+                    <h4 class="font-bold border-b pb-2 flex justify-between text-sm"><span>📦 Produtos</span><button onclick="adicionarProdutoPrompt()" class="text-pink-500 font-bold">+ Criar</button></h4>
+                    <div id="crudProdutos" class="text-xs divide-y mt-2"></div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border">
+                    <h4 class="font-bold border-b pb-2 flex justify-between text-sm"><span>👥 Profissionais</span><button onclick="adicionarFuncionarioPrompt()" class="text-pink-500 font-bold">+ Criar</button></h4>
+                    <div id="crudFuncionarios" class="text-xs divide-y mt-2"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        let cacheServicos = [], cacheProdutos = [], cacheFuncionarios = [];
+        function verificarSenha() { if (document.getElementById('senhaAdmin').value === '1234') { document.getElementById('loginModal').classList.add('hidden'); document.getElementById('sidebar').classList.replace('hidden', 'flex'); document.getElementById('contentArea').classList.remove('hidden'); mudarAba('dashboard'); } else { document.getElementById('erroLogin').classList.remove('hidden'); } }
+        async function mudarAba(aba) { ['dashboard', 'pdv', 'agenda', 'cadastros'].forEach(a => document.getElementById(`aba-${a}`).classList.add('hidden')); document.getElementById(`aba-${aba}`).classList.remove('hidden'); await carregarCaches(); if (aba === 'dashboard') carregarDashboard(); if (aba === 'pdv') preencherFormPDV(); if (aba === 'agenda') carregarAgenda(); if (aba === 'cadastros') renderizarCadastros(); }
+        async function carregarCaches() { let resS = await supabase.from('servicos').select('*'); let resP = await supabase.from('produtos').select('*'); let resF = await supabase.from('funcionarios').select('*'); if(!resS.error) cacheServicos = resS.data; if(!resP.error) cacheProdutos = resP.data; if(!resF.error) cacheFuncionarios = resF.data; }
